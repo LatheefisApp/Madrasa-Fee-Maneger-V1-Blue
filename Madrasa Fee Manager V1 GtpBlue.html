@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ml"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1e3a8a"><title>മദ്‌റസ ഫീസ് മാനേജർ v10</title>
+<style>
+:root{--g:#1e3a8a;--bg:#f8fafc;--ink:#0f172a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:700 16px "Noto Sans Malayalam","Nirmala UI",sans-serif;-webkit-text-size-adjust:100%;overflow-wrap:anywhere}input,select,button{touch-action:manipulation}button{min-height:44px}.input,select{font-size:16px}header{background:linear-gradient(135deg,#1e3a8a,#3b82f6);color:white;padding:18px}header h1{font-size:22px;margin:0 0 5px}main{max-width:900px;margin:auto;padding:12px}.nav{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}button{font:inherit;border:0;border-radius:11px;padding:12px;background:white;color:var(--g);cursor:pointer;box-shadow:0 2px 6px #0001}.nav .active,.primary{background:var(--g);color:white}.panel,.stat,.item{background:white;border-radius:15px;padding:15px;margin-bottom:12px;box-shadow:0 3px 12px #1231}h2{font-size:21px;margin:0 0 12px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.stat{font-size:14px;margin:0}.stat strong{display:block;font-size:26px;margin-top:6px}.input,select{font:inherit;width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;background:white;margin:5px 0 10px;min-height:46px}.row{display:flex;gap:8px}.row>*{flex:1;min-width:0}.hidden{display:none!important}.item{box-shadow:none;border:1px solid #e2e8f0}.muted{font-size:14px;color:#64748b;margin-top:5px}.badge{padding:5px 9px;border-radius:20px;font-size:14px;white-space:nowrap}.paid{background:#dcf7e8;color:#087343}.unpaid{background:#ffe4e6;color:#ad202b}.months{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:10px}.month{font-size:13px;text-align:center;padding:8px 3px;border-radius:8px;background:#ffe4e6;color:#ad202b}.month.ok{background:#dcf7e8;color:#087343}.btnrow{display:flex;gap:7px;flex-wrap:wrap}.btnrow button{flex:1}.notice{background:#eff6ff;border-left:4px solid #1e3a8a;padding:12px;border-radius:10px;margin:10px 0}.foot{text-align:center;font-size:12px;color:#64748b;padding:20px}.field-label{display:block;margin-top:8px;font-weight:800}.lockscreen{position:fixed;inset:0;background:linear-gradient(135deg,#1e3a8a,#3b82f6);z-index:99;display:flex;align-items:center;justify-content:center;padding:18px}.lockcard{background:#fff;border-radius:18px;padding:22px;width:100%;max-width:420px;box-shadow:0 10px 40px #0003}.lockcard h2{color:var(--g)}.voicehint{font-size:13px;color:#64748b;margin:8px 0}@media(min-width:700px){.nav{grid-template-columns:repeat(5,1fr)}.grid{grid-template-columns:repeat(4,1fr)}}@media(max-width:420px){header{padding:14px}header h1{font-size:20px}main{padding:8px}.nav{grid-template-columns:repeat(2,minmax(0,1fr))}.nav button{padding:10px 6px;font-size:14px}.row{gap:6px}.panel,.stat,.item{padding:12px}.months{grid-template-columns:repeat(3,minmax(0,1fr))}.month{font-size:12px;padding:7px 1px}}@media print{header,.nav,.noprint{display:none!important}body{background:white}.panel,.item{box-shadow:none;border:1px solid #aaa}}
+</style></head><body>
+<header><h1 id="head">🕌 മദ്‌റസ ഫീസ് മാനേജർ</h1><div id="sub">മൊബൈലിൽ ഉപയോഗിക്കാവുന്ന ഫീസ് രജിസ്റ്റർ</div></header><main>
+<nav class="nav noprint"><button class="active" onclick="go('home',this)">🏠 Home</button><button onclick="go('students',this)">👨‍🎓 കുട്ടികൾ</button><button onclick="go('fees',this)">💰 ഫീസ്</button><button onclick="go('reports',this)">📊 റിപ്പോർട്ട്</button><button onclick="settings()">⚙️ Settings</button></nav>
+<section id="home"><div class="grid"><div class="stat">ആകെ കുട്ടികൾ<strong id="n">0</strong></div><div class="stat">അടച്ചവർ<strong id="pd">0</strong></div><div class="stat">അടയ്ക്കാത്തവർ<strong id="up">0</strong></div><div class="stat">ലഭിച്ച തുക<strong id="sum">₹0</strong></div></div><div class="panel" style="margin-top:12px"><h2>📅 വർഷവും മാസവും</h2><div class="row"><select id="y" onchange="refresh()"></select><select id="m" onchange="refresh()"></select></div><p>കുട്ടിയെ ഒരിക്കൽ ചേർത്താൽ മതി. എല്ലാ മാസത്തെയും ഫീസ് രേഖ ഇതേ കുട്ടിയുടെ പേരിൽ സൂക്ഷിക്കും.</p><button class="primary" onclick="go('fees')">ഫീസ് സ്വീകരിക്കുക</button></div><div class="panel"><h2>💾 Backup</h2><p>ഡാറ്റയുടെ പകർപ്പ് ഫയലായി സൂക്ഷിക്കുക.</p><button onclick="backup()">Backup ഡൗൺലോഡ്</button><label>Backup തിരികെ ചേർക്കുക <input type="file" accept=".json" onchange="restore(event)"></label></div></section>
+<section id="students" class="hidden"><div class="panel"><h2>👨‍🎓 വിദ്യാർത്ഥികൾ</h2><input class="input" id="sq" placeholder="🔎 പേര് / ക്രമ നമ്പർ / Admission / മൊബൈൽ" oninput="renderKids()"><button class="primary" onclick="kidForm()">➕ പുതിയ കുട്ടി ചേർക്കുക</button><div id="kids"></div></div></section>
+<section id="fees" class="hidden"><div class="panel"><h2>💰 ഫീസ് സ്വീകരിക്കുക</h2><div class="row"><select id="fy" onchange="renderFees()"></select><select id="fm" onchange="renderFees()"></select></div><div class="row" style="margin-top:10px;"><select id="ffilt" onchange="renderFees()"><option value="all">എല്ലാ കുട്ടികളും</option><option value="paid">ഫീസ് അടച്ചവർ</option><option value="unpaid">ഫീസ് അടക്കാത്തവർ</option></select></div><input class="input" id="fq" placeholder="🔎 കുട്ടിയെ കണ്ടെത്തുക" oninput="renderFees()"><div id="feeList"></div></div></section>
+<section id="reports" class="hidden"><div class="panel"><h2>📊 മാസ റിപ്പോർട്ട്</h2><div class="row"><select id="ry" onchange="report()"></select><select id="rm" onchange="report()"></select></div><div id="rep"></div><div class="btnrow noprint"><button onclick="window.print()">🖨️ A4 Print / PDF</button><button onclick="csv()">⬇️ CSV</button></div></div></section>
+<div class="foot">മദ്‌റസ ഫീസ് മാനേജർ v10 • Offline HTML</div></main>
+<div id="lockscreen" class="lockscreen"><div class="lockcard"><h2>🔐 മദ്‌റസ ഫീസ് മാനേജർ</h2><p>ആപ്പ് തുറക്കാൻ പാസ്‌വേഡ് നൽകുക</p><input id="unlockPass" class="input" type="password" autocomplete="current-password" placeholder=""><button class="primary" style="width:100%" onclick="unlockApp()">തുറക്കുക</button><div id="lockError" role="alert" style="color:#b42318;margin-top:8px"></div><p class="voicehint">ആദ്യ പാസ്‌വേഡ്: 1234 (മാറ്റിയിട്ടില്ലെങ്കിൽ)</p></div></div>
+<div id="modal" class="hidden" style="position:fixed;inset:0;background:#0008;z-index:5;display:flex;align-items:center;justify-content:center;padding:12px"><div style="background:white;padding:18px;border-radius:16px;width:100%;max-width:560px;max-height:90vh;overflow:auto"><button onclick="closeM()" style="float:right">✕</button><div id="mb"></div></div></div>
+<script>
+const months=['ജനുവരി','ഫെബ്രുവരി','മാർച്ച്','ഏപ്രിൽ','മേയ്','ജൂൺ','ജൂലൈ','ഓഗസ്റ്റ്','സെപ്റ്റംബർ','ഒക്ടോബർ','നവംബർ','ഡിസംബർ'],K='madrasaFeeHTML10';let d;try{d=JSON.parse(localStorage.getItem(K))||JSON.parse(localStorage.getItem('madrasaFeeHTML9'))||JSON.parse(localStorage.getItem('madrasaFeeHTML8'))}catch(e){}if(!d)d={s:{name:'',place:'',approval:'',pass:'1234'},kids:[],payments:[]};if(!d.s)d.s={name:'',place:'',approval:'',pass:'1234'};if(!Array.isArray(d.kids))d.kids=[];if(!Array.isArray(d.payments))d.payments=[];if(!d.s.pass)d.s.pass='1234';const $=x=>document.getElementById(x),safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function save(){try{localStorage.setItem(K,JSON.stringify(d))}catch(e){alert('ഫോൺ സ്റ്റോറേജ് നിറഞ്ഞിരിക്കാം. Backup എടുത്ത് വീണ്ടും ശ്രമിക്കുക.')}}function unlockApp(){let v=$('unlockPass').value;if(v!==String(d.s.pass||'1234')){$('lockError').textContent='പാസ്‌വേഡ് തെറ്റാണ്. വീണ്ടും ശ്രമിക്കുക.';$('unlockPass').value='';return}sessionStorage.setItem('madrasaFeeUnlockedV10','1');$('lockscreen').classList.add('hidden');save();init()} function init(){let yy=new Date().getFullYear(),mm=new Date().getMonth();['y','fy','ry'].forEach(id=>$(id).innerHTML=Array.from({length:12},(_,i)=>`<option>${yy-3+i}</option>`).join(''));['m','fm','rm'].forEach(id=>$(id).innerHTML=months.map(x=>`<option>${x}</option>`).join(''));['y','fy','ry'].forEach(id=>$(id).value=yy);['m','fm','rm'].forEach(id=>$(id).value=months[mm]);refresh();head()}function head(){$('head').textContent='🕌 '+d.s.name;$('sub').textContent=[d.s.place,d.s.approval?'അംഗീ. നമ്പർ: '+d.s.approval:''].filter(Boolean).join(' • ')}function go(id,b){document.querySelectorAll('main section').forEach(x=>x.classList.add('hidden'));$(id).classList.remove('hidden');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(b)b.classList.add('active');renderKids();renderFees();report()}function ps(k,y,m){return d.payments.filter(p=>p.k===k&&p.y==y&&p.m==m)}function refresh(){let y=+$('y').value,m=months.indexOf($('m').value),paid=d.kids.filter(k=>ps(k.id,y,m).length),amt=d.payments.filter(p=>p.y==y&&p.m==m).reduce((a,p)=>a+p.amount,0);$('n').textContent=d.kids.length;$('pd').textContent=paid.length;$('up').textContent=d.kids.length-paid.length;$('sum').textContent='₹'+amt;renderKids();renderFees();report()}function renderKids(){if(!$('kids'))return;let q=($('sq').value||'').toLowerCase(),y=+$('y').value;let list=d.kids.filter(k=>[k.name,k.serial,k.admission,k.mobile].join(' ').toLowerCase().includes(q));const sortNo=(a,b)=>{let x=Number(a.serial),z=Number(b.serial);return Number.isFinite(x)&&Number.isFinite(z)?x-z:String(a.serial).localeCompare(String(b.serial),'en',{numeric:true})};let html='';['ആൺ','പെൺ'].forEach(g=>{let arr=list.filter(k=>(k.gender||'ആൺ')===g).sort(sortNo);if(!arr.length)return;html+=`<h2>${g==='ആൺ'?'👦 ആൺകുട്ടികൾ':'👧 പെൺകുട്ടികൾ'} (${arr.length})</h2>`+arr.map(k=>`<div class="item"><b>${safe(k.serial)}. ${safe(k.name)}</b><div class="muted">ക്ലാസ് ${k.cls} • അഡ്മിഷൻ ${safe(k.admission||'—')} • ₹${k.fee}/മാസം</div><div class="muted">മൊബൈൽ: ${safe(k.mobile||'—')}</div><div class="months">${months.map((m,i)=>{let p=ps(k.id,y,i);return `<div class="month ${p.length?'ok':''}">${m}<br>${p.length?'✓ ₹'+p.reduce((a,x)=>a+x.amount,0):'✕ ഇല്ല'}</div>`}).join('')}</div><button onclick="kidForm('${k.id}')">✏️ Edit</button></div>`).join('')});$('kids').innerHTML=html||'<p>കുട്ടികളെ ചേർത്തിട്ടില്ല.</p>'}
+function kidForm(id){let k=d.kids.find(x=>x.id===id)||{serial:'',admission:'',name:'',cls:1,fee:'',parent:'',mobile:'',gender:'ആൺ'};$('mb').innerHTML=`<h2>${id?'കുട്ടിയെ തിരുത്തുക':'പുതിയ കുട്ടി'}</h2><label>വിഭാഗം</label><select id="kg"><option ${k.gender==='ആൺ'?'selected':''}>ആൺ</option><option ${k.gender==='പെൺ'?'selected':''}>പെൺ</option></select>${inp('ക്രമ നമ്പർ','ks',k.serial)}${inp('Admission നമ്പർ','ka',k.admission)}${inp('കുട്ടിയുടെ പേര്','kn',k.name)}<label>ക്ലാസ്</label><select id="kc">${Array.from({length:12},(_,i)=>`<option ${k.cls==i+1?'selected':''}>${i+1}</option>`).join('')}</select>${inp('മാസഫീസ് ₹','kf',k.fee,'number')}${inp('രക്ഷിതാവിന്റെ പേര്','kp',k.parent)}${inp('മൊബൈൽ നമ്പർ','km',k.mobile,'tel')}<button class="primary" onclick="saveKid('${id||''}')">💾 Save</button>${id?` <button onclick="delKid('${id}')">Delete</button>`:''}`;openM()}function inp(l,id,v,t='text'){return `<label class="field-label" for="${id}">${l}</label><input class="input" id="${id}" type="${t}" value="${safe(v)}">`}function saveKid(id){let name=$('kn').value.trim();if(!name)return alert('പേര് നൽകുക');if(id&&!admin())return;let k={id:id||String(Date.now()),gender:$('kg').value,serial:$('ks').value,admission:$('ka').value,name,cls:+$('kc').value,fee:+$('kf').value||0,parent:$('kp').value,mobile:$('km').value};let i=d.kids.findIndex(x=>x.id===id);if(i<0)d.kids.push(k);else d.kids[i]=k;save();closeM();refresh()}function admin(){if(prompt('Admin password')!==d.s.pass){alert('Password തെറ്റാണ്');return false}return true}function delKid(id){if(!admin()||!confirm('കുട്ടിയും payment records-ഉം delete ചെയ്യണോ?'))return;d.kids=d.kids.filter(k=>k.id!==id);d.payments=d.payments.filter(p=>p.k!==id);save();closeM();refresh()}function renderFees(){if(!$('feeList'))return;let y=+$('fy').value,m=months.indexOf($('fm').value),q=($('fq').value||'').toLowerCase(),filt=$('ffilt').value;let list=d.kids.filter(k=>{let matchQ=[k.name,k.serial,k.admission,k.mobile].join(' ').toLowerCase().includes(q);let hasPaid=ps(k.id,y,m).length>0;if(filt==='paid' && !hasPaid)return false;if(filt==='unpaid' && hasPaid)return false;return matchQ;});$('feeList').innerHTML=list.map(k=>{let p=ps(k.id,y,m),a=p.reduce((x,v)=>x+v.amount,0);let details='';if(p.length){details=`<div class="muted">(${p.map(x=>x.type+': ₹'+x.amount).join(', ')})</div>`;}return `<div class="item"><b>${safe(k.name)}</b><div class="muted">ക്രമം ${safe(k.serial)} • ക്ലാസ് ${k.cls} • മാസഫീസ് ₹${k.fee}</div><p><span class="badge ${p.length?'paid':'unpaid'}">${p.length?'🟢 അടച്ചു ₹'+a:'🔴 അടച്ചിട്ടില്ല'}</span></p>${details}<button class="primary" onclick="payForm('${k.id}',${y},${m})">💰 ഫീസ് അടയ്ക്കുക</button>${p.length?` <button onclick="receipt('${k.id}',${y},${m})">രസീത് / WhatsApp</button>`:''}</div>`}).join('')||'<p>കുട്ടികളെ കണ്ടെത്തിയില്ല.</p>'}
+
+function payForm(id,y,m){
+    let k=d.kids.find(x=>x.id===id);
+    let defaultFee = k.fee || 100;
+    $('mb').innerHTML=`<h2>ഫീസ് സ്വീകരിക്കുക</h2>
+    <div class="notice">${safe(k.name)} • ക്ലാസ് ${k.cls}<br>${months[m]} ${y} • മാസഫീസ് ₹${defaultFee}</div>
+    <label>ഫീസ് ഇനം</label>
+    <select id="pt" onchange="toggleFeeInputs()">
+        <option value="തൻമാസം">തൻമാസം</option>
+        <option value="കുടിശ്ശിക">കുടിശ്ശിക</option>
+        <option value="അഡ്വാൻസ്">അഡ്വാൻസ്</option>
+        <option value="കുടിശ്ശിക+തൻമാസം">കുടിശ്ശിക + തൻമാസം</option>
+        <option value="തൻമാസം+അഡ്വാൻസ്">തൻമാസം + അഡ്വാൻസ്</option>
+        <option value="കുടിശ്ശിക+തൻമാസം+അഡ്വാൻസ്">കുടിശ്ശിക + തൻമാസം + അഡ്വാൻസ്</option>
+    </select>
+    
+    <div id="dynamicFeeInputs" style="margin-top:10px;">
+        <div id="box_thanmasam" class="form-group">
+            <label class="field-label">തൻമാസം തുക ₹</label>
+            <input class="input" id="pa_thanmasam" type="number" value="${defaultFee}" oninput="calcTotalFee()">
+        </div>
+        <div id="box_kudissika" class="form-group hidden">
+            <label class="field-label">കുടിശ്ശിക തുക ₹</label>
+            <input class="input" id="pa_kudissika" type="number" value="0" oninput="calcTotalFee()">
+        </div>
+        <div id="box_advance" class="form-group hidden">
+            <label class="field-label">അഡ്വാൻസ് തുക ₹</label>
+            <input class="input" id="pa_advance" type="number" value="0" oninput="calcTotalFee()">
+        </div>
+    </div>
+
+    <label class="field-label">ആകെ അടയ്ക്കുന്ന തുക ₹</label>
+    <input class="input" id="pa_total" type="number" value="${defaultFee}" readonly style="background:#eee; font-weight:bold;">
+    
+    <button class="primary" onclick="savePay('${id}',${y},${m})">💾 Save</button>`;
+    toggleFeeInputs();
+    openM();
+}
+
+function toggleFeeInputs(){
+    let type = $('pt').value;
+    $('box_kudissika').classList.toggle('hidden', !type.includes('കുടിശ്ശിക'));
+    $('box_thanmasam').classList.toggle('hidden', !type.includes('തൻമാസം'));
+    $('box_advance').classList.toggle('hidden', !type.includes('അഡ്വാൻസ്'));
+    calcTotalFee();
+}
+
+function calcTotalFee(){
+    let type = $('pt').value;
+    let t = type.includes('തൻമാസം') ? (parseFloat($('pa_thanmasam').value) || 0) : 0;
+    let k = type.includes('കുടിശ്ശിക') ? (parseFloat($('pa_kudissika').value) || 0) : 0;
+    let a = type.includes('അഡ്വാൻസ്') ? (parseFloat($('pa_advance').value) || 0) : 0;
+    $('pa_total').value = t + k + a;
+}
+
+function getNextMonthYear(curYear, curMonthIndex) {
+    let y = parseInt(curYear), mIndex = curMonthIndex + 1;
+    if(mIndex >= 12) { mIndex = 0; y++; }
+    return { year: y, month: mIndex };
+}
+
+function getPrevMonthYear(curYear, curMonthIndex) {
+    let y = parseInt(curYear), mIndex = curMonthIndex - 1;
+    if(mIndex < 0) { mIndex = 11; y--; }
+    return { year: y, month: mIndex };
+}
+
+function savePay(id,y,m){
+    let totalAmt = parseFloat($('pa_total').value) || 0;
+    if(totalAmt <= 0) return alert('തുക നൽകുക');
+    let now = new Date(), type = $('pt').value;
+    let dateStr = now.toLocaleDateString('en-GB'), timeStr = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+
+    let k = d.kids.find(x=>x.id===id);
+    let monthlyFee = parseFloat(k.fee) || 100;
+
+    if(type.includes('തൻമാസം')) {
+        let tAmt = parseFloat($('pa_thanmasam').value) || 0;
+        if(tAmt > 0) {
+            d.payments.push({id:String(Date.now()+Math.random()), k:id, y, m, amount:tAmt, type:'തൻമാസം', date:dateStr, time:timeStr});
+        }
+    }
+
+    if(type.includes('കുടിശ്ശിക')) {
+        let kAmt = parseFloat($('pa_kudissika').value) || 0;
+        if(kAmt > 0) {
+            d.payments.push({id:String(Date.now()+Math.random()), k:id, y, m, amount:kAmt, type:'കുടിശ്ശിക', date:dateStr, time:timeStr});
+            
+            let remKud = kAmt;
+            let curY = y, curM = m;
+            while(remKud >= monthlyFee && monthlyFee > 0) {
+                let prev = getPrevMonthYear(curY, curM);
+                curY = prev.year; curM = prev.month;
+                let allocated = monthlyFee;
+                remKud -= allocated;
+                d.payments.push({id:String(Date.now()+Math.random()), k:id, y:curY, m:curM, amount:allocated, type:'കുടിശ്ശിക', date:dateStr, time:timeStr});
+            }
+        }
+    }
+
+    if(type.includes('അഡ്വാൻസ്')) {
+        let aAmt = parseFloat($('pa_advance').value) || 0;
+        if(aAmt > 0) {
+            d.payments.push({id:String(Date.now()+Math.random()), k:id, y, m, amount:aAmt, type:'അഡ്വാൻസ്', date:dateStr, time:timeStr});
+            
+            let remAdv = aAmt;
+            let curY = y, curM = m;
+            while(remAdv >= monthlyFee && monthlyFee > 0) {
+                let next = getNextMonthYear(curY, curM);
+                curY = next.year; curM = next.month;
+                let allocated = monthlyFee;
+                remAdv -= allocated;
+                d.payments.push({id:String(Date.now()+Math.random()), k:id, y:curY, m:curM, amount:allocated, type:'അഡ്വാൻസ്', date:dateStr, time:timeStr});
+            }
+        }
+    }
+
+    save();
+    closeM();
+    refresh();
+    speakText(`${d.s.name?d.s.name+' മദ്റസ. ':''}${k.name}, ക്ലാസ് ${k.cls}. ${months[m]} ${y}. ${totalAmt} രൂപ ഫീസ് സ്വീകരിച്ചു.`);
+}
+
+function receipt(id,y,m,pid){let k=d.kids.find(x=>x.id===id),p=pid?d.payments.find(x=>x.id===pid):ps(id,y,m).slice(-1)[0];if(!p)return;$('mb').innerHTML=`<h2>🧾 ഫീസ് രസീത്</h2><div class="notice"><b>${safe(d.s.name)}</b><br>${safe(d.s.place)}<hr>കുട്ടി: ${safe(k.name)}<br>ക്ലാസ്: ${k.cls}<br>തുക: ₹${p.amount}<br>ഇനം: ${safe(p.type)}<br>മാസം: ${months[m]} ${y}<br>തീയതി: ${p.date} • സമയം: ${p.time}<br><br>تَقَبَّلَ اللهُ مِنْكُمْ</div><button class="primary" onclick="wa('${id}','${p.id}',${y},${m})">📲 WhatsApp</button> <button onclick="speakReceipt('${id}','${p.id}',${y},${m})">🔊 വിവരങ്ങൾ വായിക്കുക</button> <button onclick="window.print()">Print</button>`;openM()}function wa(id,pid,y,m){let k=d.kids.find(x=>x.id===id),p=d.payments.find(x=>x.id===pid);let rawTime=new Date();let time=p.time;try{let parts=String(p.time).match(/(\d{1,2}):(\d{2})/);if(parts){let h=+parts[1],min=parts[2],ampm=h>=12?'pm':'am';h=h%12||12;time=String(h).padStart(2,'0')+':'+min+' '+ampm}}catch(e){}let msg=`*മദ്റസ : ${d.s.name}*\n*ക്ലാസ്: ${k.cls}*\n*കുട്ടി: ${k.name}*\n*തുക: ₹${p.amount}*\n*ഇനം: ${p.type}*\n*തീയതി: ${p.date} ${time}*\n*تَقَبَّلَ اللهُ مِنْكُمْ*`;window.open('https://wa.me/'+k.mobile.replace(/\D/g,'')+'?text='+encodeURIComponent(msg),'_blank')}function report(){if(!$('rep'))return;let y=+$('ry').value,m=months.indexOf($('rm').value),pp=d.payments.filter(p=>p.y==y&&p.m==m),u=new Set(pp.map(p=>p.k)),sum=pp.reduce((a,p)=>a+p.amount,0);$('rep').innerHTML=`<div class="notice"><b>${safe(d.s.name)}</b><br>${safe(d.s.place)} • അംഗീ. നമ്പർ ${safe(d.s.approval||'—')}<br>${months[m]} ${y}<br>ആകെ കുട്ടികൾ: ${d.kids.length}<br>അടച്ചവർ: ${u.size} • അടയ്ക്കാത്തവർ: ${d.kids.length-u.size}<br>ലഭിച്ച തുക: <b>₹${sum}</b></div>`+d.kids.map(k=>{let a=pp.filter(p=>p.k===k.id),s=a.reduce((n,p)=>n+p.amount,0);return `<div class="item">${safe(k.serial)}. ${safe(k.name)} — ക്ലാസ് ${k.cls}<span class="badge ${a.length?'paid':'unpaid'}">${a.length?'🟢 ₹'+s:'🔴 ഇല്ല'}</span></div>`}).join('')}function speakText(text){try{if(!('speechSynthesis'in window)){alert('ഈ ബ്രൗസറിൽ ശബ്ദമായി വായിക്കുന്ന സൗകര്യം ലഭ്യമല്ല.');return}speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(text);u.lang='ml-IN';u.rate=0.9;u.onerror=()=>{};speechSynthesis.speak(u)}catch(e){alert('വോയ്സ് ആരംഭിക്കാൻ കഴിഞ്ഞില്ല.')}}function speakReceipt(id,pid,y,m){let k=d.kids.find(x=>x.id===id),p=d.payments.find(x=>x.id===pid);if(!k||!p)return;speakText(`മദ്റസ ${d.s.name}. ക്ലാസ് ${k.cls}. കുട്ടി ${k.name}. തുക ${p.amount} രൂപ. ഇനം ${p.type}. തീയതി ${p.date}, സമയം ${p.time}. തഖബ്ബലല്ലാഹു മിൻകും.`)}function settings(){if(!admin())return;$('mb').innerHTML=`<h2>മദ്‌റസ Settings</h2><label for="sn">മദ്‌റസയുടെ പേര് ചേർക്കുക</label><input class="input" id="sn" value="${safe(d.s.name==='മദ്‌റസയുടെ പേര്'?'':d.s.name)}"><label for="sl">സ്ഥലം ചേർക്കുക</label><input class="input" id="sl" value="${safe(d.s.place==='സ്ഥലം'?'':d.s.place)}"><label for="sa">അംഗീകൃത നമ്പർ</label><input class="input" id="sa" value="${safe(d.s.approval)}"><label for="sp">പാസ്‌വേഡ് നൽകുക</label><input class="input" id="sp" type="password" placeholder=""><button class="primary" onclick="saveSettings()">Save</button>`;openM()}function saveSettings(){d.s.name=$('sn').value;d.s.place=$('sl').value;d.s.approval=$('sa').value;if($('sp').value)d.s.pass=$('sp').value;save();head();closeM()}function backup(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));a.download='madrasa-backup.json';a.click();URL.revokeObjectURL(a.href)}function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let v=JSON.parse(r.result);if(v.kids&&v.payments&&v.s){d=v;save();init();alert('Backup restore ചെയ്തു')}else alert('ഫയൽ ശരിയല്ല')}catch(x){alert('ഫയൽ വായിക്കാൻ കഴിഞ്ഞില്ല')}};r.readAsText(f)}function csv(){let y=+$('ry').value,m=months.indexOf($('rm').value),rows=[['ക്രമം','പേര്','ക്ലാസ്','മൊബൈൽ','തുക','ഇനം','തീയതി','സമയം']];d.kids.forEach(k=>d.payments.filter(p=>p.k===k.id&&p.y==y&&p.m==m).forEach(p=>rows.push([k.serial,k.name,k.cls,k.mobile,p.amount,p.type,p.date,p.time])));let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+rows.map(r=>r.map(x=>'"'+String(x??'').replace(/"/g,'""')+'"').join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}));a.download=`fees-${y}-${m+1}.csv`;a.click()}function openM(){$('modal').classList.remove('hidden')}function closeM(){$('modal').classList.add('hidden')}init();$('unlockPass').addEventListener('keydown',e=>{if(e.key==='Enter')unlockApp()});if(sessionStorage.getItem('madrasaFeeUnlockedV10')==='1')$('lockscreen').classList.add('hidden');
+</script></body></html>
